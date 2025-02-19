@@ -1,0 +1,41 @@
+class TicketBooking implements Runnable {
+    private static int availableSeats = 10;
+    private boolean isVIP;
+    
+    public TicketBooking(boolean isVIP) {
+        this.isVIP = isVIP;
+    }
+
+    @Override
+    public void run() {
+        synchronized (this) {
+            if (availableSeats > 0) {
+                System.out.println(Thread.currentThread().getName() + " booking a seat...");
+                availableSeats--;
+                System.out.println(Thread.currentThread().getName() + " successfully booked a seat. Remaining seats: " + availableSeats);
+            } else {
+                System.out.println(Thread.currentThread().getName() + ": No seats available!");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        TicketBooking vipBooking = new TicketBooking(true);
+        TicketBooking regularBooking = new TicketBooking(false);
+
+        Thread vipThread1 = new Thread(vipBooking, "VIP 1");
+        Thread vipThread2 = new Thread(vipBooking, "VIP 2");
+        Thread regularThread1 = new Thread(regularBooking, "Regular 1");
+        Thread regularThread2 = new Thread(regularBooking, "Regular 2");
+
+        vipThread1.setPriority(Thread.MAX_PRIORITY);
+        vipThread2.setPriority(Thread.MAX_PRIORITY);
+        regularThread1.setPriority(Thread.NORM_PRIORITY);
+        regularThread2.setPriority(Thread.NORM_PRIORITY);
+
+        vipThread1.start();
+        vipThread2.start();
+        regularThread1.start();
+        regularThread2.start();
+    }
+}
