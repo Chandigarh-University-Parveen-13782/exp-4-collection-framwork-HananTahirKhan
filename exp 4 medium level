@@ -1,0 +1,93 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Card {
+    String rank;
+    String symbol;
+
+    public Card(String rank, String symbol) {
+        this.rank = rank;
+        this.symbol = symbol;
+    }
+
+    public void display() {
+        System.out.println(rank + " of " + symbol);
+    }
+}
+
+public class CardManager {
+
+    private static List<Card> deck = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        createDeck();
+        int choice;
+        do {
+            System.out.println("\nCard Management System");
+            System.out.println("1. Display All Cards");
+            System.out.println("2. Search Cards by Symbol");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    displayAllCards();
+                    break;
+                case 2:
+                    searchCardsBySymbol();
+                    break;
+                case 3:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        } while (choice != 3);
+    }
+
+    private static void createDeck() {
+        String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+        String[] symbols = {"Hearts", "Diamonds", "Clubs", "Spades"};
+
+        for (String symbol : symbols) {
+            for (String rank : ranks) {
+                deck.add(new Card(rank, symbol));
+            }
+        }
+    }
+
+    private static void displayAllCards() {
+        if (deck.isEmpty()) {
+            System.out.println("The deck is empty.");
+        } else {
+            for (Card card : deck) {
+                card.display();
+            }
+        }
+    }
+
+    private static void searchCardsBySymbol() {
+        System.out.print("Enter the symbol to search (Hearts, Diamonds, Clubs, Spades): ");
+        String symbol = scanner.nextLine();
+
+        List<Card> foundCards = new ArrayList<>();
+        for (Card card : deck) {
+            if (card.symbol.equalsIgnoreCase(symbol)) {
+                foundCards.add(card);
+            }
+        }
+
+        if (foundCards.isEmpty()) {
+            System.out.println("No cards found for the symbol " + symbol);
+        } else {
+            System.out.println("Cards found for symbol " + symbol + ":");
+            for (Card card : foundCards) {
+                card.display();
+            }
+        }
+    }
+}
